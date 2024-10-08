@@ -25,7 +25,7 @@ docker build -t rest-userdb .
 ```
 
 
-Step 4) **Optional:** confirm the build has been successful with the following command)
+Step 4) **Optional:** confirm the build has been successful with the following command
 ```bash
 docker images
 ```
