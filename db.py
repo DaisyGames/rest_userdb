@@ -36,41 +36,66 @@ def init_db() -> None:
             )
     """)
 
-    #INSERT SOMETHING FOR TESTING
-    cur.execute("""
-    INSERT INTO Users (Username, FirstName, LastName, Email)
-    VALUES ("Big John", "John", "Doe", "JD@gmail.com")
-    """)
-
-    cur.execute("""
-    INSERT INTO Users (Username, FirstName, LastName, Email)
-    VALUES ("Firmar", "Martin", "Firbacher", "marfir@gmail.com")
-    """)
-
-    cur.execute("""
-    INSERT INTO UserGroups (Name, Description)
-    VALUES ("Admin", "Administrative group, has all rights")
-    """)
-
-    cur.execute("""
-    INSERT INTO UserGroups (Name, Description)
-    VALUES ("SysAdmin", "Even bigger Admin than Admin")
-    """)
-
-    cur.execute("""
-    INSERT INTO Relations (UserID, GroupID)
-    VALUES (1, 1)
-    """)
-
-    cur.execute("""
-    INSERT INTO Relations (UserID, GroupID)
-    VALUES (2, 1)
-    """)
-
-    cur.execute("""
-    INSERT INTO Relations (UserID, GroupID)
-    VALUES (1, 2)
-    """)
+    #Fake data for quick testing
+    #Users
+    # cur.execute("""
+    # INSERT INTO Users (Username, FirstName, LastName, Email)
+    # VALUES ("LMuoz", "Leon", "Muoz", "lmuuz@gmail.com")
+    # """)
+    #
+    # cur.execute("""
+    #     INSERT INTO Users (Username, FirstName, LastName, Email)
+    #     VALUES ("MSkeldon", "Mona", "Skeldon", "mskelly@gmail.com")
+    # """)
+    #
+    # cur.execute("""
+    #     INSERT INTO Users (Username, FirstName, LastName, Email)
+    #     VALUES ("TTyler", "Tracy", "Tyler", "teetee@hotmail.com")
+    # """)
+    #
+    # cur.execute("""
+    #     INSERT INTO Users (Username, FirstName, LastName, Email)
+    #     VALUES ("GDyxon", "George", "Dyxon", "GDXN@hotmail.com")
+    #     """)
+    # #Groups
+    # cur.execute("""
+    #     INSERT INTO UserGroups (Name, Description)
+    #     VALUES ("Admin", "Administrative group, has all rights")
+    # """)
+    #
+    # cur.execute("""
+    #     INSERT INTO UserGroups (Name, Description)
+    #     VALUES ("CC0", "Call Center Passive")
+    # """)
+    # cur.execute("""
+    #     INSERT INTO UserGroups (Name, Description)
+    #     VALUES ("CC1", "Call Center Active")
+    # """)
+    # #Relations
+    # cur.execute("""
+    # INSERT INTO Relations (UserID, GroupID)
+    # VALUES (1, 1)
+    # """)
+    #
+    # cur.execute("""
+    # INSERT INTO Relations (UserID, GroupID)
+    # VALUES (2, 2)
+    # """)
+    #
+    # cur.execute("""
+    # INSERT INTO Relations (UserID, GroupID)
+    # VALUES (3, 3)
+    # """)
+    #
+    # cur.execute("""
+    #     INSERT INTO Relations (UserID, GroupID)
+    #     VALUES (4, 2)
+    # """)
+    #
+    # cur.execute("""
+    #     INSERT INTO Relations (UserID, GroupID)
+    #     VALUES (4, 3)
+    # """)
 
 #User functions
 def get_all_users() -> list[tuple[int, str, str, str, str]]:
@@ -150,7 +175,7 @@ def delete_group(group_id: int) -> None:
     cur.execute("DELETE FROM UserGroups WHERE GroupID = ?",  (group_id,))
     con.commit()
 
-#Users and Groups relations
+#Relation funcs
 def get_all_relations() -> list[tuple[str, str, int, int]]:
     cur.execute("""
                 SELECT Users.Username, UserGroups.Name ,Relations.UserID, Relations.GroupID
@@ -208,7 +233,7 @@ def add_relation(user_id: int, group_id: int) -> None:
     con.commit()
 
 def delete_relation(user_id: int, group_id: int) -> None:
-    cur.execute("DELE   TE FROM Relations WHERE UserID = ? AND GroupID = ?", (user_id, group_id))
+    cur.execute("DELETE FROM Relations WHERE UserID = ? AND GroupID = ?", (user_id, group_id))
     con.commit()
 
 def delete_user_relations(user_id: int) -> None:

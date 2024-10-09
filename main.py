@@ -3,7 +3,6 @@ from pydantic import BaseModel, Field
 
 import sqlite3
 import db
-from db import has_user_id
 
 APP_NAME: str = "User & Groups API"
 APP_DESCRIPTION: str = "User & Groups API allows you to manage users, groups and their association."
@@ -129,7 +128,6 @@ async def add_user(user: User = Body(...)):
 
     db.add_user(user.username, user.first_name, user.last_name, user.email)
 
-    #Return added data from DB
     db_new_user: tuple[int, str, str, str, str] = db.get_user_via_name(user.username)
     if not db_new_user:
         raise HTTPException(status_code=404, detail=f"Failed to create new user")
@@ -153,16 +151,16 @@ async def update_user(user_update: UserUpdate):
 
     columns: list = []
     values: list = []
-    if user_update.username != None:
+    if user_update.username is not None:
         columns.append("Username = ?")
         values.append(user_update.username)
-    if user_update.first_name != None:
+    if user_update.first_name is not None:
         columns.append("FirstName = ?")
         values.append(user_update.first_name)
-    if user_update.last_name != None:
+    if user_update.last_name is not None:
         columns.append("LastName = ?")
         values.append(user_update.last_name)
-    if user_update.email != None:
+    if user_update.email is not None:
         columns.append("Email = ?")
         values.append(user_update.email)
 
@@ -242,7 +240,7 @@ async def add_group(group: Group = Body(...)):
         raise HTTPException(status_code = 400, detail = f"Group with Name {group.name} already exists.")
 
     db.add_group(group.name, group.description)
-    # Return added data from DB
+
     db_new_group: tuple[int, str, str] = db.get_group_via_name(group.name)
     if not db_new_group:
         raise HTTPException(status_code = 404, detail = f"Failed to create new user")
@@ -264,10 +262,10 @@ async def update_group(group_update: GroupUpdate):
 
     columns: list = []
     values: list = []
-    if group_update.name != None: #None or len() > 0? None will make "" pass
+    if group_update.name is not None:
         columns.append("Name = ?")
         values.append(group_update.name)
-    if group_update.description != None:
+    if group_update.description is not None:
         columns.append("Description = ?")
         values.append(group_update.description)
 
@@ -346,7 +344,7 @@ async def get_user_relations(group_id: int):
     db_relations: list[tuple[str, str, int, int]] = db.get_group_relations(group_id)
 
     if not db_relations:
-        raise HTTPException(status_code = 404, detail = f"No relations found for group with Group ID {user_id}.")
+        raise HTTPException(status_code = 404, detail = f"No relations found for group with Group ID {group_id}.")
 
     relations_list: list[RelationDetailedDB] = []
     for relation_tuple in db_relations:
@@ -365,7 +363,7 @@ async def add_relation(relation: Relation = Body(...)):
     """Adds a new user and group relation to the database. If successful, will return the new data"""
 
     if db.has_relation(relation.user_id, relation.group_id):
-        raise HTTPException(status_code = 400, detail = "Relation between User and Group already exists")
+        raise HTTPException(status_code = 400, detail = f"Relation between User ID {relation.user_id} and Group ID {relation.group_id} already exists")
 
     if not db.has_user_id(relation.user_id):
         raise HTTPException(status_code = 404, detail = f"User with ID {relation.user_id} not found.")
@@ -387,7 +385,7 @@ async def add_relation(relation: Relation = Body(...)):
     return new_relation
 @app.delete("/relations/", tags = [TAG_RELATIONS])
 async def delete_relation(relation: Relation = Body(...)):
-    """Deletes a specific user with a given UserID and GroupID from the database"""
+    """Deletes a specific relation with a given UserID and GroupID from the database"""
 
     if not db.has_relation(relation.user_id, relation.group_id):
         raise HTTPException(status_code = 404, detail = "Relation between User and Group not found")
