@@ -166,7 +166,7 @@ def add_group(name: str, description: str) -> None:
     """, (name, description))
     con.commit()
 
-def update_group(columns: list, values: list):
+def update_group(columns: list, values: list) -> None:
     query: str =  f"UPDATE UserGroups SET {', '.join(columns)} WHERE GroupID = ?"
     cur.execute(query, values)
     con.commit()

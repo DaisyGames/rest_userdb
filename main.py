@@ -184,7 +184,7 @@ async def update_user(user_update: UserUpdate):
 
     return updated_user
 
-@app.delete("/users/{user_id}", tags = [TAG_USERS])
+@app.delete("/users/{user_id}", tags = [TAG_USERS], response_model = set)
 async def delete_user(user_id: int):
     """Deletes a specific user with a given UserID from the database"""
 
@@ -232,7 +232,7 @@ async def get_group(group_id: int):
 
     return group
 
-@app.post("/groups/", tags = [TAG_GROUPS])
+@app.post("/groups/", tags = [TAG_GROUPS], response_model = GroupDB)
 async def add_group(group: Group = Body(...)):
     """Adds a new group to the database. If successful, will return the new data, including an auto-generated GroupID"""
 
@@ -288,7 +288,7 @@ async def update_group(group_update: GroupUpdate):
     return updated_group
 
 
-@app.delete("/groups/{group_id}", tags = [TAG_GROUPS])
+@app.delete("/groups/{group_id}", tags = [TAG_GROUPS], response_model = set)
 async def delete_group(group_id: int):
     """Deletes a specific user with a given UserID from the database"""
 
@@ -383,7 +383,7 @@ async def add_relation(relation: Relation = Body(...)):
     )
 
     return new_relation
-@app.delete("/relations/", tags = [TAG_RELATIONS])
+@app.delete("/relations/", tags = [TAG_RELATIONS], response_model = set)
 async def delete_relation(relation: Relation = Body(...)):
     """Deletes a specific relation with a given UserID and GroupID from the database"""
 
@@ -393,7 +393,7 @@ async def delete_relation(relation: Relation = Body(...)):
     db.delete_relation(relation.user_id, relation.group_id)
     return {f"Relation with User ID {relation.user_id} and Group ID {relation.group_id} successfully deleted."}
 
-@app.delete("/relations/user/{user_id}", tags = [TAG_RELATIONS])
+@app.delete("/relations/user/{user_id}", tags = [TAG_RELATIONS], response_model = set)
 async def delete_user_relations(user_id: int):
     """Deletes all relations with a given UserID from the database"""
 
@@ -403,7 +403,7 @@ async def delete_user_relations(user_id: int):
     db.delete_user_relations(user_id)
     return {f"All relations with User ID {user_id} successfully deleted."}
 
-@app.delete("/relations/group/{group_id}", tags = [TAG_RELATIONS])
+@app.delete("/relations/group/{group_id}", tags = [TAG_RELATIONS], response_model = set)
 async def delete_group_relations(group_id: int):
     """Deletes all relations with a given GroupIP from the database"""
 
